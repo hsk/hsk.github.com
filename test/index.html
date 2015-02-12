@@ -25,11 +25,12 @@ code > span.al { color: #ff0000; font-weight: bold; }
 code > span.fu { color: #06287e; }
 code > span.er { color: #ff0000; font-weight: bold; }
   </style>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 </head>
 <body>
 <h1 id="test">test</h1>
 <p>markdown</p>
-<p>和の公式 <br /><span class="math">$$ \sum\_{k=1}^n k = \frac{1}{2}n(n+1) $$</span><br /> を計算する関数を C++ で実装せよ。</p>
+<p>和の公式 <span class="math">\[ \sum\_{k=1}^n k = \frac{1}{2}n(n+1) \]</span> を計算する関数を C++ で実装せよ。</p>
 <h2 id="解答">解答</h2>
 <pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> f(<span class="dt">int</span> n) {
   <span class="dt">int</span> ret = <span class="dv">0</span>;
