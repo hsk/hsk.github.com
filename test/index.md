@@ -3,9 +3,14 @@
 markdown
 
 和の公式
-$$ \sum\_{k=1}^n k = \frac{1}{2}n(n+1) $$
+
+$$ a\;\;\;b $$
+
+
+$$ \frac{a |- b c \;\;\; d|- d dd}{ eee |- eee } (rule\;error) $$
 を計算する関数を C++ で実装せよ。
 
+[test]
 解答
 ----
 
@@ -18,4 +23,3 @@ int f(int n) {
   return ret;
 }
 ```
-

@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>Canvas tutorial template</title>
+    <script type="text/javascript">
+	var cx = 250
+	var cy = 250
+	var r1 = 10
+	var sita = 0;
+    function draw(){
+        var canvas = document.getElementById('tutorial');
+        if (canvas.getContext){
+            var ctx = canvas.getContext('2d');
+            ctx.clearRect(0,0,500,500);
+			var red = "#f9432a";
+			var black = "#343624";
+			var speed = 0.03;
+			var R1 = r1 + (1+Math.sin(sita))*5;
+			var R2 = R1 * (2+Math.sin(sita/4+Math.PI*2.5))/3.01;
+			var w = Math.sin(sita) * R1;
+			sita -= speed;
+			// 0 <= w <= R1/2 <= R2 <= R
+			var w2 = w / 2
+
+			ctx.fillStyle = black;
+			drawRing(cx,cy, w2, 1, -1,sita);
+			ctx.fillStyle = red;
+			drawRing(cx,cy, w2, 1, -1,sita+Math.PI/2);
+			drawRing(cx,cy, w2, 1, -1,sita+Math.PI);
+			drawRing(cx,cy, w2, 1, -1,sita+Math.PI/2*3);
+			ctx.font = 'bold 30px/2 Unknown Font, sans-serif';
+			ctx.fillStyle = black;
+			ctx.fillText("loading now...", cx-100, cy+100, 200);
+			function drawRing(rx,ry, w2, ax, ay, sita) {
+				var a1x = w2+ax*R1*0, a1y = w2+ay*R1*0
+				var a2x = w2+ax*R1*1, a2y = w2+ay*R1*0
+				var a3x = w2+ax*R1*2, a3y = w2+ay*R1*0
+				var a4x = w2+ax*R1*2, a4y = w2+ay*R1*1
+				var a5x = w2+ax*R1*2, a5y = w2+ay*R1*2
+				var a6x = w2+ax*R1*1, a6y = w2+ay*R1*2
+				var a7x = w2+ax*R1*0, a7y = w2+ay*R1*2
+				var a8x = w2+ax*R1*0, a8y = w2+ay*R1*1
+				var a9x = w2+ax*R1*0, a9y = w2+ay*(R1-R2)*2
+				var a10x = w2+ax*R1*0, a10y = w2+ay*(R1-R2)*1
+				var a11x = w2+ax*(R1-R2*1), a11y = w2+ay*(R1-R2)*1
+				var a12x = w2+ax*(R1-R2*1), a12y = w2+ay*(R1-R2)*2
+				var a13x = w2+ax*(R1-R2*1), a13y = w2+ay*R1
+				var a14x = w2+ax*(R1-R2*1), a14y = w2+ay*(R1+R2*1)
+				var a15x = w2+ax*(R1-R2*0), a15y = w2+ay*(R1+R2*1)
+				var a16x = w2+ax*(R1+R2*1), a16y = w2+ay*(R1+R2*1)
+				var a17x = w2+ax*(R1+R2*1), a17y = w2+ay*(R1+R2*0)
+				var a18x = w2+ax*(R1+R2*1), a18y = w2+ay*(R1-R2*1)
+				var a19x = w2+ax*(R1+R2*0), a19y = w2+ay*(R1-R2*1)
+				var a20x = w2+ax*R1*0, a20y = w2+ay*(R1-R2)*1
+				var cos = Math.cos(sita);
+				var sin = Math.sin(sita);
+
+				ctx.beginPath();
+				ctx.moveTo( a1x *cos+a1y*sin+rx, -a1x*sin+a1y*cos+ry);
+				ctx.lineTo( a2x *cos+a2y*sin+rx, -a2x*sin+a2y*cos+ry);
+	            ctx.arcTo ( a3x *cos+a3y*sin+rx, -a3x*sin+a3y*cos+ry,
+	            	        a4x *cos+a4y*sin+rx, -a4x*sin+a4y*cos+ry, R1);
+	            ctx.arcTo ( a5x *cos+a5y*sin+rx, -a5x*sin+a5y*cos+ry,
+	            			a6x *cos+a6y*sin+rx, -a6x*sin+a6y*cos+ry, R1);
+	            ctx.arcTo ( a7x *cos+a7y*sin+rx, -a7x*sin+a7y*cos+ry,
+	            			a8x *cos+a8y*sin+rx, -a8x*sin+a8y*cos+ry, R1);
+	            ctx.lineTo( a9x *cos+a9y*sin+rx, -a9x*sin+a9y*cos+ry);
+	            ctx.lineTo( a10x*cos+a10y*sin+rx, -a10x*sin+a10y*cos+ry);
+	            ctx.arcTo ( a11x*cos+a11y*sin+rx, -a11x*sin+a11y*cos+ry,
+	            	        a12x*cos+a12y*sin+rx, -a12x*sin+a12y*cos+ry, R1 - R2);
+	            ctx.lineTo( a13x*cos+a13y*sin+rx, -a13x*sin+a13y*cos+ry);
+	            ctx.arcTo ( a14x*cos+a14y*sin+rx, -a14x*sin+a14y*cos+ry,
+	            			a15x*cos+a15y*sin+rx, -a15x*sin+a15y*cos+ry, R2);
+	            
+	            ctx.arcTo ( a16x*cos+a16y*sin+rx, -a16x*sin+a16y*cos+ry,
+	            			a17x*cos+a17y*sin+rx, -a17x*sin+a17y*cos+ry, R2);
+	            ctx.arcTo ( a18x*cos+a18y*sin+rx, -a18x*sin+a18y*cos+ry,
+	            			a19x*cos+a19y*sin+rx, -a19x*sin+a19y*cos+ry, R2);
+	            ctx.lineTo( a20x*cos+a20y*sin+rx, -a20x*sin+a20y*cos+ry);
+				ctx.fill();
+
+			}
+        }
+        setTimeout(draw,10);
+    }
+    </script>
+  </head>
+  <body onload="draw();">
+    <div style="text-align:center;">
+        <canvas  id="tutorial" width="500" height="500"></canvas>
+    </div>
+  </body>
+</html>
