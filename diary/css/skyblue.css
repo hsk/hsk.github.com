@@ -463,18 +463,23 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
   font-weight: 300;
   font-family: 'Dosis', 'Helvetica Neue', Helvetica, sans-serif;
-  margin-bottom: 0.5em; }
+  margin-bottom: 0.5em;
+}
 
 h1 {
+  border-bottom: 2px solid #ededed;
   font-size: 2.4em; }
 
 h2 {
+  border-bottom: 2px solid #ededed;
   font-size: 2em; }
 
 h3 {
+  border-bottom: 1px solid #ededed;
   font-size: 1.7em; }
 
 h4 {
+  border-bottom: 1px solid #ededed;
   font-size: 1.4em; }
 
 h5 {
@@ -572,6 +577,7 @@ pre {
 
 code {
   display: inline-block;
+  border :0px;
   padding: 0.1em 0.3em; }
 
 button, input[type="submit"], input[type="button"] {
@@ -2155,6 +2161,9 @@ img {
 .bg-dark {
   background-color: #252428;
   color: #fff; }
+
+.bg-dark h1 {
+  border-bottom: 0px solid #ededed;}
 
 .bg-white {
   background-color: #fff; }
