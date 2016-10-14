@@ -1,0 +1,21 @@
+<html>
+<head>
+<script src="http://pengines.swi-prolog.org/vendor/jquery/jquery-2.0.3.min.js"></script>
+<script src="http://pengines.swi-prolog.org/pengine/pengines.js"></script>
+<script type="text/x-prolog">
+main:-pengine_output(hello_world).
+</script>
+<script>
+var pengine = new Pengine({
+ask:'main',
+onoutput: function() {
+  $('#out').html($('#out').html()+'<br/>'+JSON.stringify(this.data));
+},
+server: 'http://pengines.swi-prolog.org/pengine'
+});
+</script>
+</head>
+<body>
+<div id="out"></div>
+</body>
+</html>
