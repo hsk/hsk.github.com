@@ -9,8 +9,10 @@
 :- op(1060, xfy, (&)).
 :- op( 950, xfy, [-<>, =>]).
 :- op( 900,  fy, [!, @, #]).
+:- style_check(-singleton).
 
 prove(G) :-
+        p(G),
         prove(G, 0, [], []).
 
 prove(true, T, I, I) :- !.
@@ -85,9 +87,11 @@ rule(( p(U,V,[U|P]) :-
 rule(( e(U, V) )).
 rule(( goal(P) :- #v(a) -<> @ @v(b) -<>
          @ #v(c) -<> #v(d) -<> p(a,d,P) )).
+p(A):-pengine_output(A).
 main :-
   prove(true),
-  pengine_output('ok');
+  prove(a=>a), 
+  pengine_output(ok);
   pengine_output('error').
 </script>
 <script>
@@ -97,7 +101,7 @@ onoutput: handleOutput,
 server: 'http://pengines.swi-prolog.org/pengine'
 });
 function handleOutput() {
-  $('#out').html(this.data);
+  $('#out').html($('#out').html()+'<br/>'+JSON.stringify(this.data));
 }
 </script>
 </head>
