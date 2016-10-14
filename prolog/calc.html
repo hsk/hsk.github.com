@@ -3,10 +3,12 @@
 <script src="http://pengines.swi-prolog.org/vendor/jquery/jquery-2.0.3.min.js"></script>
 <script src="http://pengines.swi-prolog.org/pengine/pengines.js"></script>
 <script type="text/x-prolog">
+eval(A+B, R) :- eval(A, A_), eval(B, B_), R is A_ + B_.
 eval(A, A) :- integer(A).
 main:-
-  eval(10, R),
-  pengine_output(R).
+  eval(10, R), pengine_output(R),
+  eval(10+20, R1), pengine_output(R1),
+  !.
 </script>
 <script>
 var pengine = new Pengine({
