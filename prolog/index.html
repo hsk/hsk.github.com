@@ -85,7 +85,10 @@ rule(( p(U,V,[U|P]) :-
 rule(( e(U, V) )).
 rule(( goal(P) :- #v(a) -<> @ @v(b) -<>
          @ #v(c) -<> #v(d) -<> p(a,d,P) )).
-main :- pengine_output('hello prolog 2').
+main :-
+  prove(true),
+  pengine_output('ok');
+  pengine_output('error').
 </script>
 <script>
 var pengine = new Pengine({
