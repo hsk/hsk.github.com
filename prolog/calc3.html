@@ -1,0 +1,49 @@
+<html>
+<head>
+<script src="http://pengines.swi-prolog.org/vendor/jquery/jquery-2.0.3.min.js"></script>
+<script src="http://pengines.swi-prolog.org/pengine/pengines.js"></script>
+<script type="text/x-prolog">
+:- op(920, xfx, [ ---> ]).
+:- op(1200, xfx, [ -- ]).
+term_expansion(A -- B, B :- A).
+
+A ---> A_, B ---> B_, R is A_ + B_
+--%------------------------------------ (E-Plus)
+A + B ---> R.
+
+A ---> A_, B ---> B_, R is A_ - B_
+--%------------------------------------ (E-Minus)
+A - B ---> R.
+
+A ---> A_, B ---> B_, R is A_ * B_
+--%------------------------------------ (E-Times)
+A * B ---> R.
+
+A ---> A_, B ---> B_, R is A_ div B_
+--%------------------------------------ (E-Div)
+A / B ---> R.
+
+A ---> A :- integer(A).               % (E-Int)
+
+main:-
+  10 ---> R, pengine_output(R),
+  10 + 20 ---> R1, pengine_output(R1),
+  10 - 20 ---> R2, pengine_output(R2),
+  10 * 20 ---> R3, pengine_output(R3),
+  110 / 20 ---> R4, pengine_output(R4),
+  !.
+</script>
+<script>
+var pengine = new Pengine({
+ask:'main',
+onoutput: function() {
+  $('#out').html($('#out').html()+'<br/>'+JSON.stringify(this.data));
+},
+server: 'http://pengines.swi-prolog.org/pengine'
+});
+</script>
+</head>
+<body>
+<div id="out"></div>
+</body>
+</html>
