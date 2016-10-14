@@ -5,11 +5,15 @@
 <script type="text/x-prolog">
 eval(A+B, R) :- eval(A, A_), eval(B, B_), R is A_ + B_.
 eval(A-B, R) :- eval(A, A_), eval(B, B_), R is A_ - B_.
+eval(A*B, R) :- eval(A, A_), eval(B, B_), R is A_ * B_.
+eval(A/B, R) :- eval(A, A_), eval(B, B_), R is A_ div B_.
 eval(A, A) :- integer(A).
 main:-
   eval(10, R), pengine_output(R),
   eval(10+20, R1), pengine_output(R1),
   eval(10-20, R2), pengine_output(R2),
+  eval(10*20, R3), pengine_output(R3),
+  eval(110/20, R4), pengine_output(R4),
   !.
 </script>
 <script>
