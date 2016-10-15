@@ -1,0 +1,83 @@
+<html>
+<head>
+<script src="http://pengines.swi-prolog.org/vendor/jquery/jquery-2.0.3.min.js"></script>
+<script src="http://pengines.swi-prolog.org/pengine/pengines.js"></script>
+<script type="text/x-prolog">
+:- op(920, xfx, [ ---> ]).
+:- op(1200, xfx, [ -- ]).
+term_expansion(A -- B, B :- A).
+
+\+integer(A), !, A ---> A_
+--%------------------------------------ (E-Plus1)
+A + B ---> A_ + B.
+
+integer(V), \+integer(B), !, B ---> B_
+--%------------------------------------ (E-Plus2)
+V + B ---> V + B_.
+
+integer(V1), integer(V2), !, V is V1 + V2
+--%------------------------------------ (E-Plus3)
+V1 + V2 ---> V.
+
+\+integer(A), !, A ---> A_
+--%------------------------------------ (E-Minus1)
+A - B ---> A_ - B.
+
+integer(V), \+integer(B), !, B ---> B_
+--%------------------------------------ (E-Minus2)
+V - B ---> V - B_.
+
+integer(V1), integer(V2), !, V is V1 - V2
+--%------------------------------------ (E-Minus3)
+V1 - V2 ---> V.
+
+\+integer(A), !, A ---> A_
+--%------------------------------------ (E-Times1)
+A * B ---> A_ * B.
+
+integer(V), \+integer(B), !, B ---> B_
+--%------------------------------------ (E-Times2)
+V * B ---> V * B_.
+
+integer(V1), integer(V2), V is V1 * V2
+--%------------------------------------ (E-Times3)
+V1 * V2 ---> V.
+
+\+integer(A), A ---> A_
+--%------------------------------------ (E-Div1)
+A / B ---> A_ / B.
+
+integer(V), \+integer(B), !, B ---> B_
+--%------------------------------------ (E-Div2)
+V / B ---> V / B_.
+
+integer(V1), integer(V2), V is V1 div V2
+--%------------------------------------ (E-Div3)
+V1 / V2 ---> V.
+
+A ---> A :- integer(A).               % (E-Int)
+
+pr(A) :- format(atom(B), '~w', [A]), pengine_output(B).
+
+main:-
+  10 ---> R, pr(R),
+  10 + 20 ---> R1, pr(R1),
+  10 - 20 ---> R2, pr(R2),
+  10 * 20 ---> R3, pr(R3),
+  110 / 20 ---> R4, pr(R4),
+  !.
+</script>
+<script>
+var pengine = new Pengine({
+ask:'main',
+onoutput: function() {
+  $('#out').html($('#out').html()+'<br/>'+JSON.stringify(this.data));
+},
+server: 'http://pengines.swi-prolog.org/pengine'
+});
+</script>
+</head>
+<body>
+<div id="out"></div>
+</body>
+</html>
