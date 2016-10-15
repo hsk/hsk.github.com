@@ -1,0 +1,80 @@
+<html>
+<head>
+<script src="http://pengines.swi-prolog.org/vendor/jquery/jquery-2.0.3.min.js"></script>
+<script src="http://pengines.swi-prolog.org/pengine/pengines.js"></script>
+<script type="text/x-prolog">
+:- op(920, xfx, [ ---> , -->> ]).
+:- op(1200, xfx, [ -- ]).
+term_expansion(A -- B, B :- A).
+
+subst(K, V, K, V).
+subst(K, V, A+B,A_+B_) :- subst(K, V, A,A_), subst(K,V, B,B_).
+subst(K, V, A-B,A_-B_) :- subst(K, V, A,A_), subst(K,V, B,B_).
+subst(K, V, A*B,A_*B_) :- subst(K, V, A,A_), subst(K,V, B,B_).
+subst(K, V, A/B,A_/B_) :- subst(K, V, A,A_), subst(K,V, B,B_).
+subst(_, _, B, B).
+
+v(A) :- integer(A).
+e(T, E, P) :- E = [], P = T.
+e(S+T, E, P) :- \+v(S), E = []+T, P = S.
+e(S+T, E, P) :- v(S), \+v(T), E = S+[], P = T.
+e(S-T, E, P) :- \+v(S), E = []-T, P = S.
+e(S-T, E, P) :- v(S), \+v(T), E = S-[], P = T.
+e(S*T, E, P) :- \+v(S), E = []*T, P = S.
+e(S*T, E, P) :- v(S), \+v(T), E = S*[], P = T.
+e(S/T, E, P) :- \+v(S), E = []/T, P = S.
+e(S/T, E, P) :- v(S), \+v(T), E = S/[], P = T.
+
+e(A, E, T), A\=T, T ---> T_, subst([], T_, E, A_)
+--%------------------------------------ (E-EvalContext)
+A ---> A_.
+
+integer(V1), integer(V2), V is V1 + V2
+--%------------------------------------ (E-Plus3)
+V1 + V2 ---> V.
+
+integer(V1), integer(V2), V is V1 - V2
+--%------------------------------------ (E-Minus3)
+V1 - V2 ---> V.
+
+integer(V1), integer(V2), V is V1 * V2
+--%------------------------------------ (E-Times3)
+V1 * V2 ---> V.
+
+integer(V1), integer(V2), V is V1 div V2
+--%------------------------------------ (E-Div3)
+V1 / V2 ---> V.
+
+A ---> A :- integer(A).               % (E-Int)
+
+A -->> A_ :- \+v(A), A ---> B, !, B -->> A_.
+A -->> A.
+
+pr(A) :- format(atom(B), '~w', [A]), pengine_output(B).
+
+main:-
+  10 ---> R, pr(R),
+  10 + 20 ---> R1, pr(R1),
+  10 - 20 ---> R2, pr(R2),
+  10 * 20 ---> R3, pr(R3),
+  1*2+3/4 -->> R4, pr(R4),
+  !.
+</script>
+<script>
+var pengine = new Pengine({
+ask:'main',
+onoutput: function() {
+  $('#out').html($('#out').html()+'<br/>'+JSON.stringify(this.data));
+},
+onerror: function() {
+  $('#out').html($('#out').html()+'<br/>'+JSON.stringify(this.data));
+},
+server: 'http://pengines.swi-prolog.org/pengine'
+});
+</script>
+</head>
+<body>
+Smallstep Evaluation Context
+<div id="out"></div>
+</body>
+</html>
