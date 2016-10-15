@@ -7,35 +7,35 @@
 :- op(1200, xfx, [ -- ]).
 term_expansion(A -- B, B :- A).
 
-\+integer(A), !, A ---> A_
+\+integer(A), A ---> A_
 --%------------------------------------ (E-Plus1)
 A + B ---> A_ + B.
 
-integer(V), \+integer(B), !, B ---> B_
+integer(V), \+integer(B), B ---> B_
 --%------------------------------------ (E-Plus2)
 V + B ---> V + B_.
 
-integer(V1), integer(V2), !, V is V1 + V2
+integer(V1), integer(V2), V is V1 + V2
 --%------------------------------------ (E-Plus3)
 V1 + V2 ---> V.
 
-\+integer(A), !, A ---> A_
+\+integer(A), A ---> A_
 --%------------------------------------ (E-Minus1)
 A - B ---> A_ - B.
 
-integer(V), \+integer(B), !, B ---> B_
+integer(V), \+integer(B), B ---> B_
 --%------------------------------------ (E-Minus2)
 V - B ---> V - B_.
 
-integer(V1), integer(V2), !, V is V1 - V2
+integer(V1), integer(V2), V is V1 - V2
 --%------------------------------------ (E-Minus3)
 V1 - V2 ---> V.
 
-\+integer(A), !, A ---> A_
+\+integer(A), A ---> A_
 --%------------------------------------ (E-Times1)
 A * B ---> A_ * B.
 
-integer(V), \+integer(B), !, B ---> B_
+integer(V), \+integer(B), B ---> B_
 --%------------------------------------ (E-Times2)
 V * B ---> V * B_.
 
@@ -47,7 +47,7 @@ V1 * V2 ---> V.
 --%------------------------------------ (E-Div1)
 A / B ---> A_ / B.
 
-integer(V), \+integer(B), !, B ---> B_
+integer(V), \+integer(B), B ---> B_
 --%------------------------------------ (E-Div2)
 V / B ---> V / B_.
 
