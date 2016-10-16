@@ -3,6 +3,9 @@
 <script src="http://pengines.swi-prolog.org/vendor/jquery/jquery-2.0.3.min.js"></script>
 <script src="http://pengines.swi-prolog.org/pengine/pengines.js"></script>
 <script type="text/x-prolog">
+/*
+Bigstep Evaluatotor
+*/
 eval(A+B, R) :- eval(A, A_), eval(B, B_), R is A_ + B_.
 eval(A-B, R) :- eval(A, A_), eval(B, B_), R is A_ - B_.
 eval(A*B, R) :- eval(A, A_), eval(B, B_), R is A_ * B_.
