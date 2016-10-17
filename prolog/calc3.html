@@ -3,6 +3,9 @@
 <script src="http://pengines.swi-prolog.org/vendor/jquery/jquery-2.0.3.min.js"></script>
 <script src="http://pengines.swi-prolog.org/pengine/pengines.js"></script>
 <script type="text/x-prolog">
+/*
+Bigstep Evaluator with Sequent Caluculus and ---> operator
+*/
 :- op(920, xfx, [ ---> ]).
 :- op(1200, xfx, [ -- ]).
 term_expansion(A -- B, B :- A).
