@@ -1,0 +1,79 @@
+<html>
+<head>
+<script src="http://pengines.swi-prolog.org/vendor/jquery/jquery-2.0.3.min.js"></script>
+<script src="http://pengines.swi-prolog.org/pengine/pengines.js"></script>
+<script type="text/x-prolog">
+/*
+構文
+x, y, z          変数
+v ::=            値
+　λ(x:T)t       ラムダ
+s, t, u ::=      項
+　x              変数
+　v              値
+　x y            関数適用
+　let x = t in u let式
+評価規則 t ---> t
+        let x = v in e[x y] ---> let x = v in e[[z := y]t] if v=λ(z:T)t
+             let x = y in t ---> [x::=y] t
+let x = let y = s in t in u ---> let y = s in let x = t in u
+                       e[t] ---> e[u]                      if t ---> u
+                                 where e::=[] | let x = [] in t | let x = v in e
+*/
+:- op(920, xfx, [ --->, -->> ]).
+:- op(500, yfx, $).
+
+v(X->_) :- atom(X).
+
+% 答
+a(V,V) :- v(V).
+a(X,X) :- atom(X).
+a(let(X=V,A),V) :- a(A,X).
+a(let(_=_,A),A_) :- a(A,A_).
+
+% 文脈、パラメータ取得
+e(let(X=U,T),let(X=H,T),U,H):- \+v(U).
+e(let(X=V,E),let(X=V,E_),U,H):- v(V), e(E,E_,U,H).
+e(T,H,T,H).
+
+subst(S,S_,S,S_).
+subst(S,S_,X->T,X->T_) :- S \= X, subst(S,S_,T,T_).
+subst(S,S_,T$U,T_$U_) :- subst(S,S_,T,T_), subst(S,S_,U,U_).
+subst(S,S_,let(X=T,U),let(X=T_,U_)) :- S\=X,subst(S,S_,T,T_), subst(S,S_,U,U_).
+subst(_,_,T,T).
+
+       let(X=V,EXV) ---> let(X=V,E) :- e(EXV,E,(X$Y),H), V=(Z->T), subst(Z,Y,T,T_), H=T_.
+         let(X=Y,T) ---> T_ :- atom(Y), subst(X,Y,T,T_).
+let(X=let(Y=S,T),U) ---> let(Y=S,let(X=T,U)).
+                  T ---> E :- e(T,E,U,H), T \= U, U ---> U_, H=U_.
+
+pr(A) :- format(atom(B), '~w', [A]), pengine_output(B).
+
+% 複数ステップ実行
+T -->> T_ :- pr(T),T--->U,!,U-->>T_.
+T -->> T_ :- a(T,T_),(T=T_;pr(T_)),pr("").
+
+test1 :- (x->x)-->>R,R=(x->x).
+test2 :- let(yy=(y->y),yy)-->>R,R=(y->y).
+test3 :- let(xx=(x->x),let(yy=(y->y),xx$yy))-->>R,R=(y->y).
+test4 :- let(xx=(x->x),let(yy=(y->y),let(zz=(z->z),let(yyzz=yy$zz,xx$yyzz))))-->>R,R=(z->z).
+main :- pr(main), test1, test2, test3, test4.
+</script>
+<script>
+var pengine = new Pengine({
+ask:'main',
+onoutput: function() {
+  $('#out').html($('#out').html()+'<br/>'+JSON.stringify(this.data));
+},
+onerror: function() {
+  $('#out').html($('#out').html()+'<br/>'+JSON.stringify(this.data));
+},
+server: 'http://pengines.swi-prolog.org/pengine'
+});
+</script>
+</head>
+<body>
+Smallstep Evaluation Context
+<div id="out"></div>
+</body>
+</html>
