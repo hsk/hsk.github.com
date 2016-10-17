@@ -1,0 +1,74 @@
+<html>
+<head>
+<script src="http://pengines.swi-prolog.org/vendor/jquery/jquery-2.0.3.min.js"></script>
+<script src="http://pengines.swi-prolog.org/pengine/pengines.js"></script>
+<script type="text/x-prolog">
+/*
+anf_trans述語は、環境E, 項Tを受け取り穴(Hole)と変換式、対応する変数名を返します。holeは、継続式を置き換えるための入れ物で、束縛のないProlog
+変数です。返却された項の中には、必ず穴が空いているので穴に変数を設定することで、継続の式を設定できます。
+*/
+
+:- op(920, xfx, [ ---> , -->> ]).
+:- op(500, yfx, $).
+:- op(1200, xfx, [ -- ]).
+term_expansion(A -- B, B :- A).
+
+v({_=_}).
+v(_->_).
+
+genid(E,E_,X) :- E_ is E + 1, format(atom(X),'.x~d',[E]).
+
+anf_trans(E,X,E,Hole,Hole,X) :- atom(X).
+anf_trans(E,(XT->T),E_,Hole,let(X=(XT->T_),Hole),X) :-
+  genid(E,E1,X),
+  anf_trans(E1,T,E_,Y,T_,Y).
+anf_trans(E,V,E_,Hole,let(X=V,Hole),X) :- v(V), genid(E,E_,X).
+anf_trans(E,S$T,E_,Hole,S_,Z):-
+  anf_trans(E,S,E1,Hole1,S_,X),
+  anf_trans(E1,T,E2,Hole2,T_,Y),
+  Hole1=T_,Hole2=let(Z=X$Y,Hole),
+  genid(E2,E_,Z).
+anf_trans(E,let(X=V,U),E_,Hole,let(X=V,U_),Y) :-
+  v(V),
+  anf_trans(E,U,E_,Hole,U_,Y).
+anf_trans(E,let(X=T,U),E_,Hole,T_,Z) :-
+  anf_trans(E,T,E1,Hole1,T_,Y),
+  Hole1=let(X=Y,Hole2),
+  anf_trans(E1,U,E_,Hole,U_,Z),Hole2=U_.
+
+pr(A) :- format(atom(B), '~w', [A]), pengine_output(B).
+test_type :- v({'A'='S'}), v(x->x),pr('test_type ok').
+test_variable :- anf_trans(0,x,0,X,X,x),pr('test_variable ok').
+test_app :- anf_trans(0,x$y,_,Y,A,Y),pr('test_app ':A).
+test_lambda :- anf_trans(0,(x->x)$(y->y),_,Y,A,Y), pr('test_lambda ':A).
+test_let :- anf_trans(0,let(z=(x->x),z),_,Y,A,Y), pr('test_let ':A).
+test_let2 :- anf_trans(0,let(z=(x->x)$(y->y),z),_,Y,A,Y), pr('test_let2 ':A).
+main:-
+  test_type,!,
+  test_variable,!,
+  test_app,!,
+  test_lambda,!,
+  test_let,!,
+  test_let2,!,
+  !
+  ; pr('test error'),
+  !.
+</script>
+<script>
+var pengine = new Pengine({
+ask:'main',
+onoutput: function() {
+  $('#out').html($('#out').html()+'<br/>'+JSON.stringify(this.data));
+},
+onerror: function() {
+  $('#out').html($('#out').html()+'<br/>'+JSON.stringify(this.data));
+},
+server: 'http://pengines.swi-prolog.org/pengine'
+});
+</script>
+</head>
+<body>
+A normal form tests.
+<div id="out"></div>
+</body>
+</html>
