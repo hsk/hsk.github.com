@@ -21,7 +21,6 @@ let x = let y = s in t in u ---> let y = s in let x = t in u
                                  where e::=[] | let x = [] in t | let x = v in e
 */
 
-:- initialization(main).
 :- op(920, xfx, [ --->, -->> ]).
 :- op(500, yfx, $).
 
