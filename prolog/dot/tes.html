@@ -3,12 +3,13 @@
 <script src="http://pengines.swi-prolog.org/vendor/jquery/jquery-2.0.3.min.js"></script>
 <script src="http://pengines.swi-prolog.org/pengine/pengines.js"></script>
 <script type="text/x-prolog">
-:- op(920, xfx, [ --->, -->> ]).
+:- op(920, xfx, [ ---> , -->> ]).
 :- op(500, yfx, $).
 
-v(X->_) :- atom(X).
 pr(A) :- format(atom(B), '~w', [A]), pengine_output(B).
-main :- pr(main).
+main:-
+  pr('test error'),
+  !.
 </script>
 <script>
 var pengine = new Pengine({
@@ -24,7 +25,7 @@ server: 'http://pengines.swi-prolog.org/pengine'
 </script>
 </head>
 <body>
-Smallstep Evaluation Context
+A normal form translation tests.
 <div id="out"></div>
 </body>
 </html>
