@@ -18,36 +18,34 @@ v(_->_).
 
 genid(E,E_,X) :- E_ is E + 1, format(atom(X),'.x~d',[E]).
 
-anf_trans(E,X,E,Hole,Hole,X) :- atom(X).
-anf_trans(E,(XT->T),E_,Hole,let(X=(XT->T_),Hole),X) :-
+anf_trans(E,X,E,Hole,X,Hole) :- atom(X).
+anf_trans(E,(XT->T),E_,let(X=(XT->T_),Hole),X,Hole) :-
   genid(E,E1,X),
-  anf_trans(E1,T,E_,Y,T_,Y).
-anf_trans(E,V,E_,Hole,let(X=V,Hole),X) :- v(V), genid(E,E_,X).
-anf_trans(E,S$T,E_,Hole,S_,Z):-
-  anf_trans(E,S,E1,Hole1,S_,X),
-  anf_trans(E1,T,E2,Hole2,T_,Y),
-  Hole1=T_,Hole2=let(Z=X$Y,Hole),
-  genid(E2,E_,Z).
-anf_trans(E,let(X=V,U),E_,Hole,let(X=V,U_),Y) :-
+  anf_trans(E1,T,E_,T_,Y,Y).
+anf_trans(E,V,E_,let(X=V,Hole),X,Hole) :- v(V), genid(E,E_,X).
+anf_trans(E,S$T,E_,T_,Z,Hole):-
+  genid(E,E1,Z),
+  anf_trans(E1,S,E2,S_,X,let(Z=X$Y,Hole)),
+  anf_trans(E2,T,E_,T_,Y,S_).
+anf_trans(E,let(X=V,U),E_,let(X=V,U_),Y,Hole) :-
   v(V),
-  anf_trans(E,U,E_,Hole,U_,Y).
-anf_trans(E,let(X=T,U),E_,Hole,T_,Z) :-
-  anf_trans(E,T,E1,Hole1,T_,Y),
-  Hole1=let(X=Y,Hole2),
-  anf_trans(E1,U,E_,Hole,U_,Z),Hole2=U_.
+  anf_trans(E,U,E_,U_,Y,Hole).
+anf_trans(E,let(X=T,U),E_,T_,Z,Hole) :-
+  anf_trans(E,U,E1,U_,Z,Hole),
+  anf_trans(E1,T,E_,T_,Y,let(X=Y,U_)).
 
 pr(A) :- format(atom(B), '~w', [A]), pengine_output(B).
 test_type :- v({'A'='S'}), v(x->x),pr('test_type ok').
-test_variable :- anf_trans(0,x,0,X,X,x),pr('test_variable ok').
-test_app :- anf_trans(0,x$y,_,Y,A,Y),pr('test_app ':A).
-test_lambda :- anf_trans(0,(x->x)$(y->y),_,Y,A,Y), pr('test_lambda ':A).
-test_let :- anf_trans(0,let(z=(x->x),z),_,Y,A,Y), pr('test_let ':A).
-test_let2 :- anf_trans(0,let(z=(x->x)$(y->y),z),_,Y,A,Y), pr('test_let2 ':A).
+test_variable :- anf_trans(0,x,0,x,X,X),pr('test_variable ok').
+test_app :- anf_trans(0,x$y,_,A,Y,Y),pr('test_app ':A).
+test_lambda :- anf_trans(0,(x->x)$(y->y),_,A,Y,Y), pr('test_lambda ':A).
+test_let :- anf_trans(0,let(z=(x->x),z),_,A,Y,Y), pr('test_let ':A).
+test_let2 :- anf_trans(0,let(z=(x->x)$(y->y),z),_,A,Y,Y), pr('test_let2 ':A).
 main:-
   test_type,!,
+  test_lambda,!,
   test_variable,!,
   test_app,!,
-  test_lambda,!,
   test_let,!,
   test_let2,!,
   !
@@ -68,7 +66,7 @@ server: 'http://pengines.swi-prolog.org/pengine'
 </script>
 </head>
 <body>
-A normal form tests.
+A normal form translation tests.
 <div id="out"></div>
 </body>
 </html>

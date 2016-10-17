@@ -4,31 +4,24 @@
 <script src="http://pengines.swi-prolog.org/pengine/pengines.js"></script>
 <script type="text/x-prolog">
 /*
-Small Step Evaluator with Evaluation Context
+Small Step Evaluator with Evaluation Context using Prolog variable
 */
 :- op(920, xfx, [ ---> , -->> ]).
 :- op(1200, xfx, [ -- ]).
 term_expansion(A -- B, B :- A).
 
-subst(K, V, K, V).
-subst(K, V, A+B,A_+B_) :- subst(K, V, A,A_), subst(K,V, B,B_).
-subst(K, V, A-B,A_-B_) :- subst(K, V, A,A_), subst(K,V, B,B_).
-subst(K, V, A*B,A_*B_) :- subst(K, V, A,A_), subst(K,V, B,B_).
-subst(K, V, A/B,A_/B_) :- subst(K, V, A,A_), subst(K,V, B,B_).
-subst(_, _, B, B).
-
 v(A) :- integer(A).
-e(T, [], T).
-e(S+T, E+T, P) :- \+v(S), e(S, E, P).
-e(S+T, S+E, P) :- v(S), \+v(T), e(T, E, P).
-e(S-T, E-T, P) :- \+v(S), e(S, E, P).
-e(S-T, T-E, P) :- v(S), \+v(T), e(T, E, P).
-e(S*T, E*T, P) :- \+v(S), e(S, E, P).
-e(S*T, S*E, P) :- v(S), \+v(T), e(T, E, P).
-e(S/T, E/T, P) :- \+v(S), e(S, E, P).
-e(S/T, S/E, P) :- v(S), \+v(T), e(T, E, P).
+e(T, H, T, H).
+e(S+T, E+T, P, H) :- \+v(S), e(S,E,P,H).
+e(S+T, T+E, P, H) :- v(S), \+v(T), e(T,E,P,H).
+e(S-T, E-T, P, H) :- \+v(S), e(S,E,P,H).
+e(S-T, S-E, P, H) :- v(S), \+v(T), e(T,E,P,H).
+e(S*T, E*T, P, H) :- \+v(S), e(S,E,P,H).
+e(S*T, S*E, P, H) :- v(S), \+v(T), e(T,E,P,H).
+e(S/T, E/T, P, H) :- \+v(S), e(S,E,P,H).
+e(S/T, S/E, P, H) :- v(S), \+v(T), e(T,E,P,H).
 
-e(A, E, T), A\=T, T ---> T_, subst([], T_, E, A_)
+e(A, A_, T, P), A\=T, T ---> T_, P=T_
 --%------------------------------------ (E-EvalContext)
 A ---> A_.
 
