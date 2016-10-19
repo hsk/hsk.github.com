@@ -58,6 +58,8 @@ test2 :- let(yy=(y->y),yy)-->>R,R=(y->y).
 test3 :- let(xx=(x->x),let(yy=(y->y),xx$yy))-->>R,R=(y->y).
 test4 :- let(xx=(x->x),let(yy=(y->y),let(zz=(z->z),let(yyzz=yy$zz,xx$yyzz))))-->>R,R=(z->z).
 main :- pr(main), test1, test2, test3, test4.
+
+
 </script>
 <script>
 var pengine = new Pengine({
